@@ -44,11 +44,13 @@ class TestVideoAnalyzer(unittest.TestCase):
         ankle_landmark.y = 0.9
         ankle_landmark.visibility = 0.8
         
-        mock_landmarks.landmark = {
-            0: nose_landmark,  # NOSE
-            27: ankle_landmark,  # LEFT_ANKLE
-            28: ankle_landmark,  # RIGHT_ANKLE
-        }
+        # Use a list for landmarks (MediaPipe uses list indexing)
+        landmarks_list = [None] * 33  # MediaPipe has 33 landmarks
+        landmarks_list[0] = nose_landmark  # NOSE
+        landmarks_list[27] = ankle_landmark  # LEFT_ANKLE
+        landmarks_list[28] = ankle_landmark  # RIGHT_ANKLE
+        
+        mock_landmarks.landmark = landmarks_list
         
         # Mock the PoseLandmark enum access
         with patch.object(self.analyzer.mp_pose, 'PoseLandmark') as mock_enum:

@@ -10,7 +10,6 @@ import numpy as np
 from typing import List, Tuple, Dict, Optional
 import json
 from dataclasses import dataclass, asdict
-from scipy.interpolate import UnivariateSpline
 
 
 @dataclass
@@ -56,7 +55,7 @@ class VideoAnalyzer:
         
         self.frame_data: List[FrameData] = []
         
-    def calibrate_scale(self, frame: np.ndarray, landmarks) -> float:
+    def calibrate_scale(self, frame: np.ndarray, landmarks) -> Optional[float]:
         """
         Calibrate pixel-to-meter ratio using athlete's height.
         
@@ -65,7 +64,7 @@ class VideoAnalyzer:
             landmarks: MediaPipe pose landmarks
             
         Returns:
-            Pixels per meter ratio
+            Pixels per meter ratio or None if calibration fails
         """
         if landmarks:
             # Calculate athlete height from head to ankle
