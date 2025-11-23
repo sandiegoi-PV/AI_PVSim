@@ -244,6 +244,7 @@ class PoleVaultAnalyzer:
         video_name = os.path.basename(analysis_results['video_path']).replace('.', '_')
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
+        csv_path = None
         # Save frame data to CSV
         if analysis_results['frame_data']:
             df = pd.DataFrame(analysis_results['frame_data'])
@@ -256,7 +257,10 @@ class PoleVaultAnalyzer:
         with open(json_path, 'w') as f:
             # Remove frame_data from JSON as it's in CSV
             results_copy = analysis_results.copy()
-            results_copy['frame_data'] = f"See {csv_path}"
+            if csv_path:
+                results_copy['frame_data'] = f"See {csv_path}"
+            else:
+                results_copy['frame_data'] = "No frame data available"
             json.dump({
                 'analysis': results_copy,
                 'inconsistencies': inconsistencies
