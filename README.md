@@ -150,6 +150,22 @@ The JSON export enables detailed comparison between athletes:
 - Measure timing differences
 - Evaluate technical efficiency
 
+### Using the Comparison Script
+
+To compare two athletes' performance:
+
+```bash
+python compare_athletes.py athlete1_analysis.json athlete2_analysis.json "John" "Mary"
+```
+
+The comparison script provides:
+- Side-by-side pole angle statistics
+- Body position comparisons at key frames
+- Vault phase analysis (approach, plant, extension)
+- Performance metrics and differences
+
+This makes it easy to identify technique differences and areas for improvement.
+
 ## System Requirements
 
 - **CPU**: Multi-core processor recommended for faster processing
