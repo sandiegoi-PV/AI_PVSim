@@ -25,7 +25,6 @@ class PhaseDetector:
     
     def __init__(self):
         self.phases = []
-        self.velocity_data = {}  # Store velocity data per phase
         
     def detect_phases(self, landmarks_list: List[Optional[dict]], video_info: dict) -> List[Dict]:
         """
@@ -71,15 +70,13 @@ class PhaseDetector:
                         velocity_stats = {
                             'max': max(phase_velocities_filtered),
                             'average': np.mean(phase_velocities_filtered),
-                            'min': min(phase_velocities_filtered),
-                            'initial': phase_velocities[0] if phase_velocities else 0,
-                            'final': phase_velocities[-1] if phase_velocities else 0,
+                            'initial': phase_velocities_filtered[0],
+                            'final': phase_velocities_filtered[-1],
                         }
                     else:
                         velocity_stats = {
                             'max': 0,
                             'average': 0,
-                            'min': 0,
                             'initial': 0,
                             'final': 0,
                         }
@@ -103,15 +100,13 @@ class PhaseDetector:
                 velocity_stats = {
                     'max': max(phase_velocities_filtered),
                     'average': np.mean(phase_velocities_filtered),
-                    'min': min(phase_velocities_filtered),
-                    'initial': phase_velocities[0] if phase_velocities else 0,
-                    'final': phase_velocities[-1] if phase_velocities else 0,
+                    'initial': phase_velocities_filtered[0],
+                    'final': phase_velocities_filtered[-1],
                 }
             else:
                 velocity_stats = {
                     'max': 0,
                     'average': 0,
-                    'min': 0,
                     'initial': 0,
                     'final': 0,
                 }
