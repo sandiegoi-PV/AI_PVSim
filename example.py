@@ -79,6 +79,9 @@ def main():
     print("=" * 80)
     print()
     
+    # Configuration
+    pole_length = 4.5  # meters
+    
     # Generate synthetic data
     print("[1/4] Generating synthetic pole vault data...")
     num_frames = 180
@@ -105,6 +108,8 @@ def main():
     # Calculate energies
     print("[3/4] Calculating energy for each phase...")
     athlete_mass = 70.0
+    print(f"Athlete Mass: {athlete_mass} kg")
+    print(f"Pole Length: {pole_length} m")
     energy_calculator = EnergyCalculator(
         athlete_mass=athlete_mass,
         pixel_to_meter_ratio=0.01

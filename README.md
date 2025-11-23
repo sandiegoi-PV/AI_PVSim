@@ -13,6 +13,12 @@ An AI-powered system for analyzing pole vault videos, detecting phases of the va
   6. Push-off
   7. Pike
 
+- **Velocity Tracking**: Records and reports athlete velocity during each phase:
+  - Initial, final, max, and average velocity values
+  - Velocity analysis per phase to identify speed patterns
+  
+- **Equipment Tracking**: Records pole length used by the athlete
+
 - **Energy Analysis**: Calculates kinetic and potential energy for each phase:
   - Initial, final, max, and average energy values
   - Energy generated per phase
@@ -66,7 +72,7 @@ python pv_sim.py path/to/video.mp4
 Specify athlete parameters:
 
 ```bash
-python pv_sim.py video.mp4 --mass 75 --height 1.85
+python pv_sim.py video.mp4 --mass 75 --height 1.85 --pole-length 4.8
 ```
 
 Save analysis to file:
@@ -80,6 +86,7 @@ python pv_sim.py video.mp4 --mass 70 --output analysis.txt
 - `video`: Path to the pole vault video file (required)
 - `--mass`: Athlete mass in kg (default: 70.0)
 - `--height`: Athlete height in meters (default: 1.80)
+- `--pole-length`: Pole length in meters (default: 4.5)
 - `--pixel-ratio`: Pixel to meter conversion ratio (default: 0.01)
 - `--output`: Output file for analysis results (default: print to console)
 
@@ -92,6 +99,7 @@ AI_PVSim - Pole Vault Video Analysis System
 Video: athlete_vault.mp4
 Athlete Mass: 75.0 kg
 Athlete Height: 1.85 m
+Pole Length: 4.5 m
 ================================================================================
 
 [1/4] Processing video and extracting pose landmarks...
@@ -107,10 +115,20 @@ Detected Pole Vault Phases:
 1. RUN
    Frames: 0 - 90
    Duration: 3.00 seconds
+   Velocity (pixels/sec):
+     Initial: 0.00
+     Max:     180.00
+     Average: 150.00
+     Final:   150.00
 
 2. PLANT
    Frames: 91 - 100
    Duration: 0.30 seconds
+   Velocity (pixels/sec):
+     Initial: 150.00
+     Max:     150.00
+     Average: 125.00
+     Final:   50.00
 
 ... (additional phases)
 
