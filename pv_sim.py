@@ -18,7 +18,7 @@ def main():
         epilog="""
 Examples:
   python pv_sim.py video.mp4
-  python pv_sim.py video.mp4 --mass 75 --height 1.85
+  python pv_sim.py video.mp4 --mass 75 --height 1.85 --pole-length 4.8
   python pv_sim.py video.mp4 --mass 70 --output analysis.txt
         """
     )
@@ -28,6 +28,8 @@ Examples:
                        help='Athlete mass in kg (default: 70.0)')
     parser.add_argument('--height', type=float, default=1.80,
                        help='Athlete height in meters (default: 1.80)')
+    parser.add_argument('--pole-length', type=float, default=4.5,
+                       help='Pole length in meters (default: 4.5)')
     parser.add_argument('--pixel-ratio', type=float, default=0.01,
                        help='Pixel to meter conversion ratio (default: 0.01)')
     parser.add_argument('--output', type=str, default=None,
@@ -50,6 +52,7 @@ Examples:
     print(f"Video: {args.video}")
     print(f"Athlete Mass: {args.mass} kg")
     print(f"Athlete Height: {args.height} m")
+    print(f"Pole Length: {args.pole_length} m")
     print("=" * 80)
     print()
     
@@ -110,6 +113,7 @@ Examples:
                 f.write(f"Video: {args.video}\n")
                 f.write(f"Athlete Mass: {args.mass} kg\n")
                 f.write(f"Athlete Height: {args.height} m\n")
+                f.write(f"Pole Length: {args.pole_length} m\n")
                 f.write("=" * 80 + "\n\n")
                 f.write(phase_summary)
                 f.write("\n")

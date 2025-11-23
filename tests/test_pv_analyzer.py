@@ -48,6 +48,13 @@ class TestPhaseDetector(unittest.TestCase):
         self.assertIn('phase', phases[0])
         self.assertIn('start_frame', phases[0])
         self.assertIn('end_frame', phases[0])
+        
+        # Check that velocity stats are included
+        self.assertIn('velocity_stats', phases[0])
+        self.assertIn('max', phases[0]['velocity_stats'])
+        self.assertIn('average', phases[0]['velocity_stats'])
+        self.assertIn('initial', phases[0]['velocity_stats'])
+        self.assertIn('final', phases[0]['velocity_stats'])
 
 
 class TestEnergyCalculator(unittest.TestCase):
@@ -151,6 +158,10 @@ class TestIntegration(unittest.TestCase):
         phases = detector.detect_phases(landmarks_list, video_info)
         self.assertGreater(len(phases), 0)
         
+        # Verify velocity stats are included
+        for phase in phases:
+            self.assertIn('velocity_stats', phase)
+        
         # Energy calculation
         calculator = EnergyCalculator(athlete_mass=70.0)
         energies = calculator.calculate_phase_energies(landmarks_list, phases, video_info)
@@ -160,6 +171,34 @@ class TestIntegration(unittest.TestCase):
         comparator = PerformanceComparator()
         comparisons = comparator.compare_performance(energies, 70.0)
         self.assertEqual(len(comparisons), 2)
+    
+    def test_phase_summary_includes_velocity(self):
+        """Test that phase summary includes velocity information"""
+        detector = PhaseDetector()
+        
+        # Create landmark data with motion
+        landmarks_list = []
+        for i in range(30):
+            landmarks = {
+                'left_hip': {'x': 100 + i*5, 'y': 200, 'z': 0, 'visibility': 0.9},
+                'right_hip': {'x': 120 + i*5, 'y': 200, 'z': 0, 'visibility': 0.9},
+                'left_shoulder': {'x': 100 + i*5, 'y': 180, 'z': 0, 'visibility': 0.9},
+                'right_shoulder': {'x': 120 + i*5, 'y': 180, 'z': 0, 'visibility': 0.9},
+                'left_ankle': {'x': 100 + i*5, 'y': 250, 'z': 0, 'visibility': 0.9},
+                'right_ankle': {'x': 120 + i*5, 'y': 250, 'z': 0, 'visibility': 0.9}
+            }
+            landmarks_list.append(landmarks)
+        
+        video_info = {'fps': 30}
+        phases = detector.detect_phases(landmarks_list, video_info)
+        
+        # Get summary
+        summary = detector.get_phase_summary()
+        
+        # Verify velocity is mentioned in the summary
+        self.assertIn('Velocity', summary)
+        self.assertIn('Max:', summary)
+        self.assertIn('Average:', summary)
 
 
 if __name__ == '__main__':

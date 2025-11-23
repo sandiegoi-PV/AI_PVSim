@@ -25,6 +25,7 @@ class PhaseDetector:
     
     def __init__(self):
         self.phases = []
+        self.velocity_data = {}  # Store velocity data per phase
         
     def detect_phases(self, landmarks_list: List[Optional[dict]], video_info: dict) -> List[Dict]:
         """
@@ -62,22 +63,65 @@ class PhaseDetector:
             
             if detected_phase != current_phase:
                 if current_phase is not None:
+                    # Calculate velocity statistics for the phase
+                    phase_velocities = velocities[phase_start:frame_idx]
+                    phase_velocities_filtered = [v for v in phase_velocities if v is not None and v != 0]
+                    
+                    if phase_velocities_filtered:
+                        velocity_stats = {
+                            'max': max(phase_velocities_filtered),
+                            'average': np.mean(phase_velocities_filtered),
+                            'min': min(phase_velocities_filtered),
+                            'initial': phase_velocities[0] if phase_velocities else 0,
+                            'final': phase_velocities[-1] if phase_velocities else 0,
+                        }
+                    else:
+                        velocity_stats = {
+                            'max': 0,
+                            'average': 0,
+                            'min': 0,
+                            'initial': 0,
+                            'final': 0,
+                        }
+                    
                     phases.append({
                         'phase': current_phase,
                         'start_frame': phase_start,
                         'end_frame': frame_idx - 1,
-                        'duration': (frame_idx - phase_start) / fps
+                        'duration': (frame_idx - phase_start) / fps,
+                        'velocity_stats': velocity_stats
                     })
                 current_phase = detected_phase
                 phase_start = frame_idx
         
         # Add final phase
         if current_phase is not None:
+            phase_velocities = velocities[phase_start:]
+            phase_velocities_filtered = [v for v in phase_velocities if v is not None and v != 0]
+            
+            if phase_velocities_filtered:
+                velocity_stats = {
+                    'max': max(phase_velocities_filtered),
+                    'average': np.mean(phase_velocities_filtered),
+                    'min': min(phase_velocities_filtered),
+                    'initial': phase_velocities[0] if phase_velocities else 0,
+                    'final': phase_velocities[-1] if phase_velocities else 0,
+                }
+            else:
+                velocity_stats = {
+                    'max': 0,
+                    'average': 0,
+                    'min': 0,
+                    'initial': 0,
+                    'final': 0,
+                }
+            
             phases.append({
                 'phase': current_phase,
                 'start_frame': phase_start,
                 'end_frame': len(landmarks_list) - 1,
-                'duration': (len(landmarks_list) - phase_start) / fps
+                'duration': (len(landmarks_list) - phase_start) / fps,
+                'velocity_stats': velocity_stats
             })
         
         self.phases = phases
@@ -225,9 +269,20 @@ class PhaseDetector:
             duration = phase_info['duration']
             start = phase_info['start_frame']
             end = phase_info['end_frame']
+            velocity_stats = phase_info.get('velocity_stats', {})
             
             summary += f"{i}. {phase.value.upper()}\n"
             summary += f"   Frames: {start} - {end}\n"
-            summary += f"   Duration: {duration:.2f} seconds\n\n"
+            summary += f"   Duration: {duration:.2f} seconds\n"
+            
+            # Add velocity information
+            if velocity_stats:
+                summary += f"   Velocity (pixels/sec):\n"
+                summary += f"     Initial: {velocity_stats.get('initial', 0):.2f}\n"
+                summary += f"     Max:     {velocity_stats.get('max', 0):.2f}\n"
+                summary += f"     Average: {velocity_stats.get('average', 0):.2f}\n"
+                summary += f"     Final:   {velocity_stats.get('final', 0):.2f}\n"
+            
+            summary += "\n"
         
         return summary
