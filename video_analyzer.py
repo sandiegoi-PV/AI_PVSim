@@ -16,6 +16,11 @@ from typing import Dict, List, Tuple, Optional
 class PoleVaultAnalyzer:
     """Analyzes pole vault videos to extract movement data and detect inconsistencies."""
     
+    # Configuration constants
+    LOW_VISIBILITY_THRESHOLD = 0.5  # Minimum confidence for landmark visibility
+    LOW_VISIBILITY_COUNT_THRESHOLD = 5  # Number of low visibility landmarks to flag a frame
+    SUDDEN_MOVEMENT_THRESHOLD = 0.3  # Maximum position change (as fraction of frame) between frames
+    
     def __init__(self):
         """Initialize the analyzer with MediaPipe pose detection."""
         self.mp_pose = mp.solutions.pose
@@ -47,7 +52,8 @@ class PoleVaultAnalyzer:
         ydl_opts = {
             'format': 'best[ext=mp4]',
             'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
-            'quiet': False,
+            'quiet': True,  # Suppress verbose output
+            'no_warnings': True,
         }
         
         try:
@@ -204,8 +210,8 @@ class PoleVaultAnalyzer:
         # Check for low visibility
         for frame in frame_data:
             low_vis_count = sum(1 for key in frame.keys() 
-                               if key.endswith('_visibility') and frame[key] < 0.5)
-            if low_vis_count > 5:  # More than 5 landmarks with low visibility
+                               if key.endswith('_visibility') and frame[key] < self.LOW_VISIBILITY_THRESHOLD)
+            if low_vis_count > self.LOW_VISIBILITY_COUNT_THRESHOLD:
                 inconsistencies['low_visibility_frames'].append({
                     'frame': frame['frame'],
                     'time': frame['time'],
@@ -213,13 +219,12 @@ class PoleVaultAnalyzer:
                 })
         
         # Check for sudden movements (large position changes)
-        threshold = 0.3  # 30% of frame dimension
         for i in range(1, len(frame_data)):
             prev = frame_data[i-1]
             curr = frame_data[i]
             
             # Check center of mass sudden changes
-            if abs(curr['center_of_mass_y'] - prev['center_of_mass_y']) > threshold:
+            if abs(curr['center_of_mass_y'] - prev['center_of_mass_y']) > self.SUDDEN_MOVEMENT_THRESHOLD:
                 inconsistencies['sudden_movements'].append({
                     'frame': curr['frame'],
                     'time': curr['time'],
