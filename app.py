@@ -241,7 +241,7 @@ def upload_file():
         # Clean up uploaded file after processing
         try:
             os.remove(upload_path)
-        except:
+        except OSError:
             pass
         
         return redirect(url_for('results', analysis_id=analysis_id))
@@ -252,7 +252,7 @@ def upload_file():
         try:
             if 'upload_path' in locals() and os.path.exists(upload_path):
                 os.remove(upload_path)
-        except:
+        except OSError:
             pass
         return redirect(url_for('index'))
 

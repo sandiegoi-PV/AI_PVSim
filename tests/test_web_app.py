@@ -6,6 +6,7 @@ import unittest
 import os
 import tempfile
 import json
+import shutil
 from app import app
 
 
@@ -26,7 +27,6 @@ class TestFlaskApp(unittest.TestCase):
     
     def tearDown(self):
         """Clean up test directories"""
-        import shutil
         if os.path.exists(self.test_upload_dir):
             shutil.rmtree(self.test_upload_dir)
         if os.path.exists(self.test_output_dir):
