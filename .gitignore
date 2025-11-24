@@ -135,3 +135,7 @@ test_videos/
 *.mp4
 *.avi
 *.mov
+
+# Web app uploads and outputs
+uploads/
+static/output/
