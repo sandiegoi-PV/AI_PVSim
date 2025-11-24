@@ -6,6 +6,13 @@ This document provides instructions for deploying the AI_PVSim web application.
 
 ### Starting the Server
 
+For development with debug mode enabled:
+```bash
+export FLASK_DEBUG=true
+python app.py
+```
+
+For production-like testing:
 ```bash
 python app.py
 ```
@@ -18,6 +25,7 @@ The application can be configured using environment variables:
 
 - `SECRET_KEY`: Flask secret key for session management (default: 'dev-secret-key-change-in-production')
 - `MAX_CONTENT_LENGTH`: Maximum upload file size in bytes (default: 100MB)
+- `FLASK_DEBUG`: Enable debug mode (default: False) - **NEVER enable in production**
 
 ## Production Deployment
 
