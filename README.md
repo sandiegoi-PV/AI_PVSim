@@ -29,6 +29,13 @@ An AI-powered system for analyzing pole vault videos, detecting phases of the va
   - Suggests specific training exercises
   - Optimizes timing and technique
 
+- **Web Interface**: Easy-to-use web application for video upload and analysis
+  - Upload pole vault videos directly through browser
+  - Real-time video processing with pose detection
+  - Side-by-side video comparison (original vs. annotated)
+  - Interactive results dashboard
+  - Download analysis reports
+
 ## Installation
 
 1. Clone the repository:
@@ -50,10 +57,35 @@ pip install -r requirements.txt
 - NumPy
 - SciPy
 - Matplotlib
+- Flask
+- Werkzeug
 
 ## Usage
 
-### Basic Usage
+### Web Application (Recommended)
+
+Start the web server:
+
+```bash
+python app.py
+```
+
+Then open your browser and navigate to:
+```
+http://localhost:5000
+```
+
+The web interface allows you to:
+1. Upload a pole vault video (MP4, AVI, MOV, MKV, WEBM)
+2. Enter athlete parameters (mass, height)
+3. Get comprehensive analysis results including:
+   - Side-by-side video comparison with pose detection overlay
+   - Phase detection results
+   - Energy analysis for each phase
+   - Performance comparison to Olympic athletes
+   - Training recommendations
+
+### Command Line Interface
 
 Analyze a pole vault video:
 
@@ -194,12 +226,21 @@ The system includes performance data for:
 - **Mondo Duplantis**: 6.24m world record holder
 - **Reference profiles**: Based on Olympic-level performance
 
+### Web Application Architecture
+
+- **Backend**: Flask web framework for request handling
+- **Video Processing**: OpenCV and MediaPipe for real-time pose estimation
+- **Visualization**: Side-by-side video comparison with pose overlay
+- **Storage**: Temporary file storage for uploads and processed videos
+- **API**: RESTful API endpoint for programmatic access
+
 ## Limitations
 
 - Requires clear visibility of the athlete throughout the vault
 - Camera position and angle affect accuracy
 - Pixel-to-meter calibration may need adjustment per video
 - Reference data is approximate based on published performance metrics
+- Video processing may take several minutes depending on video length and hardware
 
 ## Future Enhancements
 

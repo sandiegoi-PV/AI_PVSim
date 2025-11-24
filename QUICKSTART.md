@@ -11,9 +11,48 @@ cd AI_PVSim
 pip install -r requirements.txt
 ```
 
-## Try It Out (30 seconds)
+## Web Application (Recommended)
 
-### Run the example with synthetic data:
+### Start the Web Server
+```bash
+python app.py
+```
+
+Then open your browser and navigate to:
+```
+http://localhost:5000
+```
+
+### Using the Web Interface
+
+1. **Upload Your Video**
+   - Click "Choose Video File"
+   - Select your pole vault video (MP4, AVI, MOV, etc.)
+   - Enter athlete parameters (mass, height)
+   - Click "Analyze Video"
+
+2. **View Results**
+   - Watch the side-by-side comparison video (original vs. pose detection)
+   - Review detected phases and timing
+   - See energy analysis for each phase
+   - Get performance comparison to Olympic athletes
+   - Read personalized training recommendations
+
+3. **Analyze Another Video**
+   - Click "Analyze Another Video" to upload a new video
+
+The web interface provides:
+- 🎥 Side-by-side video comparison
+- 📊 Interactive results dashboard
+- 🏃 Real-time pose detection visualization
+- 📈 Performance metrics and recommendations
+- 💾 Downloadable analysis reports
+
+## Command Line Interface
+
+### Try the Example (30 seconds)
+
+Run the example with synthetic data:
 ```bash
 python example.py
 ```
